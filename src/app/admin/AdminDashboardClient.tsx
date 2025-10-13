@@ -1,6 +1,7 @@
 "use client";
 
 import AdminStats from "@/components/admin/AdminStats";
+import DoctorsManagement from "@/components/admin/DoctorsManagement";
 import Navbar from "@/components/Navbar";
 import { useAppointments } from "@/hooks/use-appointments";
 import { useGetDoctors } from "@/hooks/use-doctors";
@@ -15,15 +16,19 @@ const AdminDashboardClient = () => {
     useAppointments();
 
   const totalDoctors = doctors.length;
+
   const totalAppointments = appointments.length;
+
   const activeDoctors = doctors.reduce((count, doctor) => {
     return doctor.isActive ? count + 1 : count;
   }, 0);
+
   const completedAppointments = appointments.reduce((count, appointment) => {
     return appointment.status === "COMPLETED" ? count + 1 : count;
   }, 0);
 
   if (doctorsLoading || appointmentsLoading) return <LoadingUI />;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -61,6 +66,8 @@ const AdminDashboardClient = () => {
           totalDoctors={totalDoctors}
           key={user?.id}
         />
+
+        <DoctorsManagement />
       </div>
     </div>
   );
