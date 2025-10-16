@@ -87,3 +87,26 @@ export async function updateDoctor(input: updateDoctorInput) {
     );
   }
 }
+
+export async function getAvailableDoctors() {
+  try {
+    const availableDoctors = await prisma.doctor.findMany({
+      where: {
+        isActive: true,
+      },
+      include: {
+        _count: { select: { appointments: true } },
+      },
+      orderBy: { name: "asc" },
+    });
+
+    return availableDoctors.map((ad) => ({
+      ...ad,
+      appointmentsCount: ad._count.appointments,
+    }));
+  } catch (error) {
+    const errorMessage = "Error while fetching available doctors details";
+    console.log(errorMessage);
+    throw new Error(error instanceof Error ? error.message : errorMessage);
+  }
+}
